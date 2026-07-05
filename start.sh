@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # =========================================================================
 #  MinecraftConfigurator — start.sh
-#  Ready-to-use startup script template. Set RAM below, then run.
+#  Set RAM below, then run.
 # =========================================================================
 
 # --- EDIT THIS: set to the same value, sized per jvm/README.md ---
