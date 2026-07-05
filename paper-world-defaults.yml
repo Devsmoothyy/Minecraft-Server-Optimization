@@ -1,0 +1,84 @@
+# =========================================================================
+#  MinecraftConfigurator — paper-world-defaults.yml
+#  Target: Paper 1.20.x+ (per-world default config)
+#  Scope: engine/performance settings only — no gameplay rules included.
+# =========================================================================
+#
+# This file lives at `config/paper-world-defaults.yml` and applies to every
+# world unless a world has its own override file. The stock file also
+# contains many gameplay toggles (mob spawning behavior tweaks, item
+# stacking, anti-xray, etc.) — those are deliberately left out here.
+# Everything below is purely about server load and tick performance.
+
+_version: 30
+
+# -------------------------------------------------------------------------
+# Chunk loading & view distance behavior
+# -------------------------------------------------------------------------
+chunks:
+  # How many chunks can be sent to a single player per tick. Lower this on
+  # low-bandwidth or CPU-constrained servers to smooth out spikes when
+  # players teleport or fly quickly; raise it if you have headroom and
+  # want faster world streaming.
+  max-auto-save-chunks-per-tick: 24
+  # Controls how aggressively Paper prioritizes chunks close to a player
+  # over farther ones during loading. "urgent" is a good default.
+  prioritize-chunk-updates: "flush"
+
+# -------------------------------------------------------------------------
+# Entity tick/activation ranges — the single biggest performance lever
+# on most survival servers.
+# -------------------------------------------------------------------------
+entities:
+  spawning:
+    # Distance (in chunks) around a player where mobs are allowed to
+    # naturally spawn at all. Lower = fewer entities to simulate.
+    monster-spawn-max-light-level: 0
+  entity-tracking-range: # distance in blocks a player receives entity updates for
+    players: 48
+    animals: 32
+    monsters: 32
+    misc: 24
+    other: 32
+    display: 32
+
+# -------------------------------------------------------------------------
+# Tick throttling for non-critical entities
+# -------------------------------------------------------------------------
+tick-rates:
+  # How often (in ticks) far-away/idle mobs re-evaluate behavior instead
+  # of every tick. Higher = less CPU, slightly less responsive mob AI far
+  # from players — usually not noticeable.
+  mob-spawner: 1
+  container-update: 1
+  villager:
+    validatenearbypoi: 60  # was event-heavy every tick; batching this saves CPU on villager-heavy worlds
+
+# -------------------------------------------------------------------------
+# Redstone (engine implementation choice, not a gameplay balance change)
+# -------------------------------------------------------------------------
+redstone-implementation: "alternate-current"  # generally faster than vanilla on large builds
+
+# -------------------------------------------------------------------------
+# Hopper performance
+# -------------------------------------------------------------------------
+hopper:
+  # Item-moving cooldown in ticks between hopper transfers. Vanilla is 8.
+  # Raising this (e.g. to 8-16) reduces CPU load on hopper-heavy servers
+  # (sorting systems, farms) at the cost of slightly slower item transfer.
+  cooldown-when-full: 20
+  disable-move-event: false # keep false if any plugins rely on hopper move events
+
+# -------------------------------------------------------------------------
+# Environment simulation distance
+# -------------------------------------------------------------------------
+environment:
+  # Caps fluid (water/lava) tick updates far from players. Reduces CPU
+  # cost of large ocean/nether worlds with nobody nearby.
+  optimize-explosions: true
+
+# -------------------------------------------------------------------------
+# Chunk unloading
+# -------------------------------------------------------------------------
+chunk-loading:
+  autoconfig-send-distance: true # let Paper compute a safe send-distance from your view-distance/RAM

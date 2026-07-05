@@ -1,0 +1,81 @@
+# =========================================================================
+#  MinecraftConfigurator — velocity.toml
+#  Target: Velocity proxy (all recent versions)
+#  Scope: proxy/engine settings only — no gameplay rules included.
+# =========================================================================
+# This file lives at the root of your Velocity proxy install.
+# Backend servers are NOT listed here with real values — add your own
+# under [servers] before starting the proxy.
+
+config-version = "2.7"
+
+# -------------------------------------------------------------------------
+# Basic identity
+# -------------------------------------------------------------------------
+bind = "0.0.0.0:25565"      # address:port players connect to
+motd = "<#00AAAA>A MinecraftConfigurator-powered proxy"
+show-max-players = 1000
+online-mode = true          # MUST be true for a public proxy; false only for offline/cracked networks
+
+# Forces players to connect with a valid, matching client version instead
+# of silently allowing mismatched protocol versions to fumble through.
+force-key-authentication = true
+
+# -------------------------------------------------------------------------
+# Performance-relevant networking
+# -------------------------------------------------------------------------
+# Compression threshold in bytes — packets smaller than this are sent
+# uncompressed (compression has CPU overhead, not worth it for tiny
+# packets). 256 is a good balance of bandwidth vs CPU for most setups.
+compression-threshold = 256
+compression-level = -1        # -1 = default zlib level, good balance
+
+# Read timeout in milliseconds before a stalled connection is dropped.
+# Lower this if you want faster detection of dead client connections.
+read-timeout = 30000
+
+# Enables the proxy to haproxy-protocol forward real client IPs to
+# backend servers. Only enable if your backend servers are configured
+# to trust proxy-protocol (see paper-global.yml `proxies` section).
+haproxy-protocol = false
+
+# TCP fast-open — reduces connection-establishment latency on supported
+# OSes. Safe to leave enabled; no effect on unsupported systems.
+tcp-fast-open = false
+
+# -------------------------------------------------------------------------
+# Player experience / connection handling (kept minimal — proxy routing
+# behavior, not gameplay)
+# -------------------------------------------------------------------------
+[servers]
+# Example only — replace with your actual backend servers.
+# lobby = "127.0.0.1:30001"
+# survival = "127.0.0.1:30002"
+
+try = [
+    # "lobby"
+]
+
+[forced-hosts]
+# Optional: route specific domains to specific backend servers.
+# "lobby.example.com" = ["lobby"]
+
+[advanced]
+# Number of threads used for handling connections. -1 lets Velocity pick
+# based on available CPU cores — a safe default for most hardware.
+compression-level = -1
+login-ratelimit = 3000        # ms between allowed login attempts from the same IP — anti-bot protection
+max-players = 1000
+sample-players-in-ping = false
+announce-forge = false
+kick-existing-players = false
+ping-passthrough = "disabled" # "mods" or "description" have a small overhead; disabled is fastest
+
+[query]
+enabled = false
+port = 25565
+map = "Velocity"
+show-plugins = false
+
+[metrics]
+enabled = false  # disable bStats reporting for privacy / a tiny bit less background network activity

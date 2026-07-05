@@ -1,0 +1,50 @@
+# =========================================================================
+#  MinecraftConfigurator — bukkit.yml
+#  Target: Bukkit / Spigot / Paper (all read this file)
+#  Scope: engine/performance settings only — no gameplay rules included.
+# =========================================================================
+
+settings:
+  allow-end: true
+  warn-on-overload: true       # logs a warning when the server can't keep up with tick rate — keep this on, it's your early warning sign
+  permissions-file: permissions.yml
+  update-folder: update
+  plugin-profiling: false      # only enable temporarily when diagnosing a slow plugin; adds overhead
+  connection-throttle: 4000    # ms a single IP must wait between reconnect attempts — protects against reconnect-spam load
+  query-plugins: true
+  deprecated-verbose: default
+  shutdown-message: "Server closed."
+
+spawn-limits:
+  # Hard caps on simultaneous mobs per category, server-wide per world.
+  # These exist to stop uncontrolled entity growth from tanking TPS —
+  # they are performance safety valves, not difficulty settings.
+  monsters: 70
+  animals: 15
+  water-animals: 15
+  water-ambient: 20
+  water-underground-creature: 5
+  ambient: 15
+
+chunk-gc:
+  # How often (in ticks) Bukkit checks for and unloads chunks nobody is
+  # near anymore. Lower = frees memory faster but slightly more CPU
+  # spent scanning; higher = less scanning but chunks linger longer.
+  period-in-ticks: 600
+
+ticks-per:
+  # These control how often certain periodic world updates run, in
+  # ticks. Raising them reduces background CPU load; keep at or near
+  # vanilla defaults unless you're specifically tuning for load.
+  animal-spawns: 400
+  monster-spawns: 1
+  water-spawns: 1
+  water-ambient-spawns: 1
+  water-underground-creature-spawns: 1
+  ambient-spawns: 1
+  autosave: 6000
+
+worlds: {}
+# Intentionally empty.
+  # Per-world overrides go here if needed — left empty by default so
+  # every world uses the settings above.

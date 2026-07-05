@@ -1,0 +1,77 @@
+# =========================================================================
+#  MinecraftConfigurator — spigot.yml
+#  Target: Spigot / Paper (Spigot config is inherited by Paper too)
+#  Scope: engine/performance settings only — no gameplay rules included.
+# =========================================================================
+
+config-version: 12
+
+settings:
+  # Enables saving user (playerdata) files asynchronously. Small but free
+  # performance win, no downside for normal setups.
+  save-user-cache-on-stop-only: false
+
+  # Bounding box / entity activation optimizations
+  moved-wrongly-threshold: 0.0625
+  moved-too-quickly-multiplier: 10.0
+
+  # How far (in blocks) entities become "inactive" and stop doing most AI
+  # processing when no player is nearby. Lower = better performance with
+  # many entities, at the cost of mobs freezing sooner when unobserved.
+  timeout-time: 60
+  restart-on-crash: true
+  restart-script: "./start.sh" # Ensure this file exists and is executable.
+
+world-settings:
+  default:
+    # -----------------------------------------------------------------
+    # Entity activation range (blocks) — mobs beyond this distance from
+    # a player go "dormant" and skip most per-tick logic. This is the
+    # single most effective lever for reducing CPU usage on servers
+    # with lots of mobs/animals.
+    # -----------------------------------------------------------------
+    entity-activation-range:
+      animals: 32 # Balanced value suitable for most small-to-medium servers.
+      monsters: 32
+      raiders: 48
+      misc: 16
+      water: 16
+      villagers: 32
+      flying-monsters: 32
+
+    # -----------------------------------------------------------------
+    # Entity tracking range (blocks) — how far away a player still
+    # receives network updates about an entity's position/state.
+    # Lower values reduce network + CPU load with many entities.
+    # -----------------------------------------------------------------
+    entity-tracking-range:
+      players: 48
+      animals: 48
+      monsters: 48
+      misc: 32
+      other: 64
+
+    # Merges nearby identical item drops into a single stack to reduce
+    # entity count after large explosions or farm harvesting.
+    merge-radius:
+      item: 2.5
+      exp: 3.0
+
+    # View-distance-tied chunk performance
+    view-distance: default   # inherits from server.properties; set a number here to override per-world
+
+    # Ticks between hopper item transfer checks. Vanilla is 8; raising
+    # this reduces CPU load from item-sorting systems.
+    hopper-tick: 8
+    hopper-amount: 1
+
+    # Reduces CPU cost of large chained TNT/creeper explosions by
+    # capping how many blocks are processed for knockback per explosion.
+    # Increase only if your server heavily relies on TNT cannons.
+    max-tnt-per-tick: 100
+
+    # Squid/dolphin/wandering-trader/etc. spawn caps that exist purely
+    # to prevent runaway entity counts crashing performance (not a
+    # gameplay difficulty setting).
+    wither-spawn-sound-radius: 0
+    nerf-spawner-mobs: true  # Significant CPU reduction for large mob farms.

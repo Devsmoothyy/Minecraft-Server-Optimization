@@ -1,0 +1,93 @@
+# =========================================================================
+#  MinecraftConfigurator — paper-global.yml
+#  Target: Paper 1.20.x+ (global config, split-config layout)
+#  Scope: engine/performance settings only — no gameplay rules included.
+# =========================================================================
+#
+# This file lives at the root of your server as `config/paper-global.yml`.
+# It controls settings that apply to the whole server, as opposed to
+# `paper-world-defaults.yml`, which applies per-world.
+#
+# Only sections relevant to stability and performance are included below.
+# If a section from the stock file isn't here, it's gameplay-related and
+# intentionally left out of this project — use Paper's stock defaults or
+# consult the official docs for those.
+
+_version: 30
+
+# -------------------------------------------------------------------------
+# Async chunk & world I/O tuning
+# -------------------------------------------------------------------------
+chunk-system:
+  # Number of worker threads used to generate/load chunks off the main
+  # thread. Leave on "auto" unless you know your CPU core count and want
+  # to reserve cores for other processes (e.g. a proxy on the same box).
+  io-threads: -1          # -1 = auto-detect based on CPU cores
+  worker-threads: -1      # -1 = auto-detect based on CPU cores
+  gen-parallelism: default
+
+# -------------------------------------------------------------------------
+# Console / logging
+# -------------------------------------------------------------------------
+logging:
+  # Deduplicates identical log lines that repeat in a short window
+  # (common with certain warning spam). Purely cosmetic/performance for
+  # disk I/O on noisy servers.
+  deduplicate-similar-log-messages: true
+
+# -------------------------------------------------------------------------
+# Messages / kick reasons — left at defaults intentionally (not gameplay,
+# just player-facing text; safe to skip customizing here)
+# -------------------------------------------------------------------------
+
+# -------------------------------------------------------------------------
+# Proxy / networking
+# -------------------------------------------------------------------------
+proxies:
+  # Enable ONLY if you are running this Paper server behind Velocity or
+  # BungeeCord. Leave both false for a standalone server exposed directly.
+  velocity:
+    enabled: false
+    online-mode: true
+    # secret: "generate-and-set-this-if-enabled"
+  bungee-cord:
+    online-mode: true
+  # If true, trusts forwarded player IPs from the proxy. Only enable this
+  # if proxies.velocity.enabled or BungeeCord IP-forwarding is set up —
+  # otherwise players can spoof their IP.
+  proxy-protocol: false
+
+# -------------------------------------------------------------------------
+# Watchdog — detects a frozen main thread and restarts before a silent hang
+# -------------------------------------------------------------------------
+watchdog:
+  # Milliseconds the main thread can be unresponsive before Paper force-
+  # kills the server (so your process manager can restart it cleanly).
+  # 60s is a reasonable default; lower it if you want faster crash-restarts,
+  # raise it if you have legitimately long startup/world-gen spikes.
+  early-warning-every: 5000
+  early-warning-delay: 10000
+
+# -------------------------------------------------------------------------
+# Collision & entity performance (engine-level, not gameplay balance)
+# -------------------------------------------------------------------------
+collisions:
+  # Skips fine-grained collision checks between entities that are clearly
+  # far apart. Reduces CPU cost with large mob/entity counts.
+  enable-player-collisions: true
+  send-full-pos-for-hard-colliding-entities: true
+
+# -------------------------------------------------------------------------
+# Async operations
+# -------------------------------------------------------------------------
+misc:
+  # Loads player chat/tab-completion data off the main thread where
+  # possible. Safe to leave enabled; purely a performance option.
+  load-permissions-yml-before-plugins: true
+
+# -------------------------------------------------------------------------
+# Timings / profiling (leave off unless actively debugging performance)
+# -------------------------------------------------------------------------
+timings:
+  enabled: false
+  verbose: true
